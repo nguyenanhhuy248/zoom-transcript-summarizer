@@ -128,6 +128,12 @@ ENV/
 env.bak/
 venv.bak/
 
+# Secrets
+*.secrets.toml
+
+# Temp folder
+tmp/
+
 # Spyder project settings
 .spyderproject
 .spyproject
