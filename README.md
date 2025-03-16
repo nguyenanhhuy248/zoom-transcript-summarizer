@@ -1,11 +1,11 @@
 # Zoom Transcript Summarizer
 
-A web application that uses AI model to generate summaries of Zoom meeting transcripts. Built with FastAPI, React, and used a fine-tunned Gemma-2B model.
+A web application that uses AI model to generate summaries of Zoom meeting transcripts. Built with FastAPI, React, and used a fine-tuned Gemma-2B model.
 
 ## Features
 
 - 🚀 Responsive UI built with React and Material-UI
-- 🤖 AI-powered summarization using a fine-tunned Gemma-2B model
+- 🤖 AI-powered summarization using a fine-tuned Gemma-2B model
 - 📝 Support for VTT transcript files downloaded from Zoom
 - ⚡ Asynchronous processing with FastAPI
 - 🎨 Intuitive interface with drag-and-drop file upload
