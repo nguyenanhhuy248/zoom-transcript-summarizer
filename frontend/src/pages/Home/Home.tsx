@@ -7,6 +7,7 @@ import {
   Paper,
   Button,
   Fade,
+  CircularProgress,
 } from '@mui/material';
 import { FileUploader } from '../../components/FileUploader/FileUploader';
 import { uploadTranscript } from '../../services/api';
@@ -18,9 +19,10 @@ export const Home = () => {
 
   const handleUpload = async () => {
     if (!file) return;
-
-    setSummary('');
+    
     setLoading(true);
+    setSummary('');
+    
     try {
       const response = await uploadTranscript(file);
       setSummary(response.summary);
@@ -103,6 +105,21 @@ export const Home = () => {
               onUpload={handleUpload}
               loading={loading}
             />
+
+            {loading && (
+              <Box sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                gap: 2,
+                my: 2 
+              }}>
+                <CircularProgress size={20} />
+                <Typography variant="body1" color="text.secondary">
+                  Summarizing your transcript...
+                </Typography>
+              </Box>
+            )}
 
             <TextField
               fullWidth
