@@ -52,8 +52,6 @@ zoom-transcript-summariser/
    cd backend
    ```
 
-   ```
-
 2. Install dependencies:
    ```bash
    poetry install
