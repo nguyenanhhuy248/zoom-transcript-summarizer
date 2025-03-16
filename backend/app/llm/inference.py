@@ -1,4 +1,5 @@
 from transformers import AutoTokenizer, AutoModelForCausalLM
+from app.config import settings
 import torch
 import webvtt
 
@@ -82,7 +83,7 @@ async def summarize(model, tokenizer, input):
     token_inputs = token_inputs.to(get_torch_device())
     inputs = {
         "input_ids": token_inputs,
-        "max_length": 8196,
+        "max_length": settings.max_token_limit,
         "do_sample": True,
         "temperature": 0.001,
     }
@@ -141,3 +142,64 @@ async def split_transcript(file: str, tokenizer, token_limit: int) -> list:
             token_counter = len(tokenizer.encode(message))
     message_groups.append(current_message_group)
     return message_groups
+
+async def stream_summarize(model, tokenizer, input: str):
+    """
+    Generate summary and stream it word by word.
+
+    Args:
+        model: The language model
+        tokenizer: The tokenizer
+        input: The input text to summarize
+
+    Yields:
+        str: Words from the summary one at a time
+    """
+    # First generate the complete summary
+    prompt_template = """
+        From the meeting transcript below, create a meeting summary.
+        The summary should be no longer than half of the original transcript and 
+        should retain all the important information such as facts, details, problems, questions, and actions needed.
+        Meeting transcript:
+        {}
+    """
+    prompt = prompt_template.format(input)
+    chat = [
+        {"role": "user", "content": prompt},
+        {"role": "model", "content": """Summary: """},
+    ]
+    
+    # Generate complete summary first
+    token_inputs = tokenizer.apply_chat_template(
+        chat, tokenize=True, return_tensors="pt", add_generation_prompt=True
+    )
+    token_inputs = token_inputs.to(get_torch_device())
+    
+    with torch.no_grad():
+        outputs = model.generate(
+            input_ids=token_inputs,
+            max_new_tokens=512,
+            do_sample=True,
+            temperature=0.7,
+            num_beams=4,
+            no_repeat_ngram_size=2,
+            early_stopping=True,
+        )
+    
+    # Get the generated text
+    generated_text = tokenizer.decode(outputs[0][token_inputs.shape[1]:], skip_special_tokens=True)
+    
+    # Stream the generated text word by word
+    current_word = ""
+    for char in generated_text:
+        if char in [" ", ".", ",", "!", "?", ";"]:
+            if current_word:
+                yield current_word + char
+                current_word = ""
+            elif char not in [" "]:
+                yield char
+        else:
+            current_word += char
+    
+    if current_word:
+        yield current_word

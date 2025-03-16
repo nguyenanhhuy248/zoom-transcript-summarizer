@@ -1,7 +1,0 @@
-[default]
-model_name = "nguyenanhhuy248/gemma-2b-it-samsum"
-token_limit = 4096
-
-[default.params]
-torch_dtype = "float16"
-max_new_tokens = 512
