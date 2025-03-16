@@ -13,6 +13,7 @@ A web application that uses AI model to generate summaries of Zoom meeting trans
 
 ## Demo video
 
+https://github.com/user-attachments/assets/d40b7566-7ffd-4f35-ac53-6a555e3f96d1
 
 ## Project Structure
 
