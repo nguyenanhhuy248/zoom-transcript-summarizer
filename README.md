@@ -34,6 +34,7 @@ zoom-transcript-summariser/
 │   │   ├── pages/         # Page components
 │   │   └── services/      # API services
 │   └── package.json       # Node.js dependencies
+│
 └── notebook/              # A notebook for fine-tunning Gemma-2B model in Google Colab
 ```
 
