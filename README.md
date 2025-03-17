@@ -12,7 +12,8 @@ A web application built with FastAPI and React that uses a fine-tuned Gemma-2B L
 
 ## Demo video
 
-https://github.com/user-attachments/assets/6626d997-2bc4-448c-b560-3a51796e9db3
+https://github.com/user-attachments/assets/1fe7691b-32d3-4e01-a8d6-25e65985e89b
+
 
 
 ## Project Structure
