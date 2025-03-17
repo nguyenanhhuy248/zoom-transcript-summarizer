@@ -1,6 +1,6 @@
 # Zoom Transcript Summarizer
 
-A web application built with FastAPI and React that uses a fine-tuned Gemma-2B Large Language model to summarize Zoom meeting transcripts.
+A web application that uses AI model to generate summaries of Zoom meeting transcripts. Built with FastAPI, React, and used a fine-tuned Gemma-2B model.
 
 ## Features
 
@@ -8,11 +8,12 @@ A web application built with FastAPI and React that uses a fine-tuned Gemma-2B L
 - 🤖 AI-powered summarization using a fine-tuned Gemma-2B model
 - 📝 Support for VTT transcript files downloaded from Zoom
 - ⚡ Asynchronous processing with FastAPI
+- 🎨 Intuitive interface with drag-and-drop file upload
 - 📋 Easy copy-to-clipboard functionality
 
 ## Demo video
 
-https://github.com/user-attachments/assets/1fe7691b-32d3-4e01-a8d6-25e65985e89b
+https://github.com/user-attachments/assets/3d195ab1-62ea-468e-b18b-62252ff1f1c5
 
 
 
@@ -35,7 +36,7 @@ zoom-transcript-summariser/
 │   │   └── services/      # API services
 │   └── package.json       # Node.js dependencies
 │
-└── notebook/              # A notebook for fine-tunning Gemma-2B model by LoRA in Google Colab
+└── notebook/              # A notebook for fine-tunning Gemma-2B model in Google Colab
 ```
 
 ## Prerequisites
