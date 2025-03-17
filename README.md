@@ -1,6 +1,6 @@
 # Zoom Transcript Summarizer
 
-A web application built with FastAPI and React that uses a fine-tuned Gemma-2B Large Language model to summarize Zoom meeting transcripts.
+A web application built with FastAPI and React that uses a fine-tuned Gemma-2B Large Language Model to summarize Zoom meeting transcripts.
 
 ## Features
 
