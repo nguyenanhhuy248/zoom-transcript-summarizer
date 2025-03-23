@@ -2,6 +2,8 @@
 
 A web application built with FastAPI and React that uses a fine-tuned Gemma-2B Large Language Model to summarize Zoom meeting transcripts.
 
+The notebook for fine-tuning Gemma-2B model on Google Colab is provided in the repo. The fine-tuned model is published to Hugging Face @ https://huggingface.co/nguyenanhhuy248/gemma-2b-it-samsum
+
 ## Features
 
 - 🚀 Responsive UI built with React and Material-UI
@@ -13,8 +15,6 @@ A web application built with FastAPI and React that uses a fine-tuned Gemma-2B L
 ## Demo video
 
 https://github.com/user-attachments/assets/3d195ab1-62ea-468e-b18b-62252ff1f1c5
-
-
 
 ## Project Structure
 
@@ -49,16 +49,19 @@ zoom-transcript-summariser/
 ### Backend Setup
 
 1. Navigate to the backend directory:
+
    ```bash
    cd backend
    ```
 
 2. Install dependencies:
+
    ```bash
    poetry install
    ```
 
 3. Create a `.secrets.toml` file in `app/config` with your HuggingFace token:
+
 ```toml
 # .secrets.toml
 HUGGINGFACE_TOKEN = "your_token_here"
@@ -67,6 +70,7 @@ HUGGINGFACE_TOKEN = "your_token_here"
 ### Frontend Setup
 
 1. Navigate to the frontend directory:
+
    ```bash
    cd frontend
    ```
@@ -81,12 +85,14 @@ HUGGINGFACE_TOKEN = "your_token_here"
 ## Running the Application
 
 1. Start the backend server:
+
    ```bash
    cd backend
    uvicorn app.main:app --reload
    ```
 
 2. In a new terminal, start the frontend development server:
+
    ```bash
    cd frontend
    npm start
