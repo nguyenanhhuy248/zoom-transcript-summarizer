@@ -1,8 +1,8 @@
 # Zoom Transcript Summarizer
 
-A web application built with FastAPI and React that uses a fine-tuned Gemma-2B Large Language Model to summarize Zoom meeting transcripts.
+A web application built with FastAPI and React. Uses a fine-tuned Google's Gemma-2B-it Large Language Model to summarize Zoom meeting transcripts.
 
-The notebook for fine-tuning Gemma-2B model on Google Colab is provided in the /notebook directory. The fine-tuned model is published to Hugging Face @ https://huggingface.co/nguyenanhhuy248/gemma-2b-it-samsum
+The notebook for fine-tuning Gemma-2B-it model on Google Colab is provided in the /notebook directory. The fine-tuned model is published to Hugging Face @ https://huggingface.co/nguyenanhhuy248/gemma-2b-it-samsum
 
 ## Features
 
