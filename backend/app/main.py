@@ -1,14 +1,18 @@
-from fastapi import FastAPI
-from fastapi.exceptions import RequestValidationError
-from starlette.exceptions import HTTPException
-from starlette.middleware.cors import CORSMiddleware
+"""Main module for the FastAPI application."""
+from __future__ import annotations
+
 from contextlib import asynccontextmanager
 
 from app.api.errors.http_error import http_error_handler
 from app.api.errors.validation_error import http422_error_handler
 from app.api.v1.endpoints.summarizer import router as summarizer_router
-from app.config import settings
+from app.config.config import settings
 from app.llm.inference import load_model
+from fastapi import FastAPI
+from fastapi.exceptions import RequestValidationError
+from starlette.exceptions import HTTPException
+from starlette.middleware.cors import CORSMiddleware
+
 
 @asynccontextmanager
 async def lifespan(application: FastAPI):
@@ -40,17 +44,22 @@ def create_application() -> FastAPI:
     # Configure CORS
     application.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"],
+        allow_origins=['*'],
         allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
+        allow_methods=['*'],
+        allow_headers=['*'],
     )
 
     application.add_exception_handler(HTTPException, http_error_handler)
-    application.add_exception_handler(RequestValidationError, http422_error_handler)
+    application.add_exception_handler(
+        RequestValidationError, http422_error_handler,
+    )
 
-    application.include_router(summarizer_router, prefix=settings.api_prefix, tags=["summarizer"])
+    application.include_router(
+        summarizer_router, prefix=settings.api_prefix, tags=['summarizer'],
+    )
 
     return application
+
 
 app = create_application()

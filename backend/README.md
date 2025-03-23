@@ -21,11 +21,13 @@ backend/
 ## Setup
 
 1. Install dependencies:
+
 ```bash
 poetry install
 ```
 
 2. Create a `.secrets.toml` file in `app/config` with your HuggingFace token:
+
 ```toml
 # .secrets.toml
 HUGGINGFACE_TOKEN = "your_token_here"
@@ -34,11 +36,13 @@ HUGGINGFACE_TOKEN = "your_token_here"
 ## Running the Application
 
 Development:
+
 ```bash
 uvicorn app.main:app --reload
 ```
 
 Production:
+
 ```bash
 uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
@@ -46,6 +50,7 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 ## API Documentation
 
 Once running, visit:
+
 - Swagger UI: http://localhost:8000/docs
 - ReDoc: http://localhost:8000/redoc
 

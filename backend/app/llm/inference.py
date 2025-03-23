@@ -1,37 +1,43 @@
-from transformers import AutoTokenizer, AutoModelForCausalLM
-from app.config import settings
+"""LLM Inference module."""
+from __future__ import annotations
+
 import torch
 import webvtt
+from app.config.config import settings
+from transformers import AutoModelForCausalLM
+from transformers import AutoTokenizer
 
-# Function to get the appropriate torch dtype based on available hardware
-def get_torch_dtype():
+
+def get_torch_dtype() -> torch.dtype:
     """
     Determine the appropriate torch dtype based on available hardware.
 
-    If a GPU or MPS supported Mac device is available, use float16 for faster computation.
+    If a GPU or MPS supported Mac device is available,
+    use float16 for faster computation.
     Otherwise, use float32.
     """
+    # Use float16 for GPU or MPS supported Mac devices
     if torch.cuda.is_available() or torch.backends.mps.is_built():
-        return torch.bfloat16  # Use float16 for GPU or MPS supported Mac devices
+        return torch.bfloat16
     return torch.float32
 
-# Function to get the appropriate torch device based on available hardware
-def get_torch_device():
+
+def get_torch_device() -> torch.device:
     """
     Determine the appropriate torch device based on available hardware.
 
-    If a GPU is available, use the GPU. If an MPS supported Mac device is available, use the MPS device.
+    If a GPU is available, use the GPU.
+    If an MPS supported Mac device is available, use the MPS device.
     Otherwise, use the CPU.
     """
     if torch.cuda.is_available():
-        return torch.device("cuda")
-    elif torch.backends.mps.is_built():
-        return torch.device("mps")
-    else:
-        return torch.device("cpu")
+        return torch.device('cuda')
+    if torch.backends.mps.is_built():
+        return torch.device('mps')
+    return torch.device('cpu')
 
-# Load the tokenizer and model from Hugging Face
-async def load_model(model_name):
+
+async def load_model(model_name: str) -> tuple[AutoTokenizer, AutoModelForCausalLM]:
     """
     Load the tokenizer and model from Hugging Face.
 
@@ -48,44 +54,45 @@ async def load_model(model_name):
         low_cpu_mem_usage=True,
         return_dict=True,
         torch_dtype=get_torch_dtype(),
-        device_map="auto",
+        device_map='auto',
     )
     return tokenizer, loaded_model
 
-# Function to summarize the meeting transcript
-async def summarize(model, tokenizer, input):
+
+async def summarize(model: AutoModelForCausalLM, tokenizer: AutoTokenizer, input_str: str) -> str:
     """
     Summarize the given meeting transcript.
 
     Parameters:
     - model (AutoModelForCausalLM): The model to use for summarization.
     - tokenizer (AutoTokenizer): The tokenizer to use for tokenizing the input.
-    - input (str): The meeting transcript to summarize.
+    - input_str (str): The meeting transcript to summarize.
 
     Returns:
     - str: The summarized meeting transcript.
     """
     prompt_template = """
         From the meeting transcript below, create a meeting summary.
-        The summary should be no longer than half of the original transcript and 
-        should retain all the important information such as facts, details, problems, questions, and actions needed.
+        The summary should be no longer than half of the original transcript and
+        should retain all the important information such as facts, details,
+        problems, questions, and actions needed.
         Meeting transcript:
         {}
     """
-    prompt = prompt_template.format(input)
+    prompt = prompt_template.format(input_str)
     chat = [
-        {"role": "user", "content": prompt},
-        {"role": "model", "content": """Summary: """},
+        {'role': 'user', 'content': prompt},
+        {'role': 'model', 'content': """Summary: """},
     ]
     token_inputs = tokenizer.apply_chat_template(
-        chat, tokenize=True, return_tensors="pt", add_generation_prompt=True
+        chat, tokenize=True, return_tensors='pt', add_generation_prompt=True,
     )
     token_inputs = token_inputs.to(get_torch_device())
     inputs = {
-        "input_ids": token_inputs,
-        "max_length": settings.max_token_limit,
-        "do_sample": True,
-        "temperature": 0.001,
+        'input_ids': token_inputs,
+        'max_length': settings.max_token_limit,
+        'do_sample': True,
+        'temperature': 0.001,
     }
 
     token_outputs = model.generate(**inputs).to(get_torch_device())
@@ -93,7 +100,7 @@ async def summarize(model, tokenizer, input):
 
     return tokenizer.decode(new_tokens, skip_special_tokens=True)
 
-# Function to remove message numbers from the transcript
+
 async def remove_message_number(message: str) -> str:
     """
     Remove message numbers from the transcript.
@@ -101,17 +108,17 @@ async def remove_message_number(message: str) -> str:
     Given a string representing a meeting transcript, this function removes all lines
     that can be converted to an integer (i.e. message numbers) and returns the new string.
     """
-    message_lines = message.split("\n")
-    new_message = ""
+    message_lines = message.split('\n')
+    new_message = ''
     for line in message_lines:
         try:
             int(line)
         except ValueError:
-            new_message += line + "\n"
+            new_message += line + '\n'
     return new_message
 
-# Function to split the transcript into manageable groups
-async def split_transcript(file: str, tokenizer, token_limit: int) -> list:
+
+async def split_transcript(file: str, tokenizer, token_limit: int) -> list[str]:
     """
     Split the transcript into groups of messages that are within a specified token limit.
 
@@ -130,7 +137,7 @@ async def split_transcript(file: str, tokenizer, token_limit: int) -> list:
 
     message_groups = []
     token_counter = 0
-    current_message_group = ""
+    current_message_group = ''
     for caption in webvtt.read(file):
         message = await remove_message_number(caption.text)
         token_counter += len(tokenizer.encode(message))
@@ -142,64 +149,3 @@ async def split_transcript(file: str, tokenizer, token_limit: int) -> list:
             token_counter = len(tokenizer.encode(message))
     message_groups.append(current_message_group)
     return message_groups
-
-async def stream_summarize(model, tokenizer, input: str):
-    """
-    Generate summary and stream it word by word.
-
-    Args:
-        model: The language model
-        tokenizer: The tokenizer
-        input: The input text to summarize
-
-    Yields:
-        str: Words from the summary one at a time
-    """
-    # First generate the complete summary
-    prompt_template = """
-        From the meeting transcript below, create a meeting summary.
-        The summary should be no longer than half of the original transcript and 
-        should retain all the important information such as facts, details, problems, questions, and actions needed.
-        Meeting transcript:
-        {}
-    """
-    prompt = prompt_template.format(input)
-    chat = [
-        {"role": "user", "content": prompt},
-        {"role": "model", "content": """Summary: """},
-    ]
-    
-    # Generate complete summary first
-    token_inputs = tokenizer.apply_chat_template(
-        chat, tokenize=True, return_tensors="pt", add_generation_prompt=True
-    )
-    token_inputs = token_inputs.to(get_torch_device())
-    
-    with torch.no_grad():
-        outputs = model.generate(
-            input_ids=token_inputs,
-            max_new_tokens=512,
-            do_sample=True,
-            temperature=0.7,
-            num_beams=4,
-            no_repeat_ngram_size=2,
-            early_stopping=True,
-        )
-    
-    # Get the generated text
-    generated_text = tokenizer.decode(outputs[0][token_inputs.shape[1]:], skip_special_tokens=True)
-    
-    # Stream the generated text word by word
-    current_word = ""
-    for char in generated_text:
-        if char in [" ", ".", ",", "!", "?", ";"]:
-            if current_word:
-                yield current_word + char
-                current_word = ""
-            elif char not in [" "]:
-                yield char
-        else:
-            current_word += char
-    
-    if current_word:
-        yield current_word
