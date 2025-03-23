@@ -3,7 +3,7 @@ package-mode = false
 name = "zoom-transcript-summariser"
 version = "0.1.0"
 description = ""
-authors = ["Your Name <you@example.com>"]
+authors = ["Huy Nguyen <nguyenanhhuy248@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
@@ -21,10 +21,17 @@ fastapi = "^0.115.6"
 uvicorn = "^0.34.0"
 python-multipart = "^0.0.20"
 dynaconf = "^3.2.6"
+starlette = ">=0.40.0,<0.47.0"
+pydantic = "^2.6.3"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^4.1.0"
 black = "^25.1.0"
+pylint = "^3.1.0"
+flake8 = "^7.0.0"
+mypy = "^1.8.0"
+autopep8 = "^2.0.4"
+pyupgrade = "^3.15.0"
 
 [build-system]
 requires = ["poetry-core"]
