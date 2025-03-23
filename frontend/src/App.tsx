@@ -1,6 +1,6 @@
-import { ThemeProvider, CssBaseline } from '@mui/material';
-import { theme } from './styles/theme';
-import { Home } from './pages/Home/Home';
+import { ThemeProvider, CssBaseline } from "@mui/material";
+import { theme } from "./styles/theme";
+import { Home } from "./pages/Home/Home";
 
 function App() {
   return (
