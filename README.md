@@ -13,7 +13,10 @@ The notebook for fine-tuning Gemma-2B-it model on Google Colab is provided in th
 
 ## Demo video
 
-https://github.com/user-attachments/assets/3d195ab1-62ea-468e-b18b-62252ff1f1c5
+
+https://github.com/user-attachments/assets/d458ab34-fe41-4095-9c94-b48d4f06d5b9
+
+
 
 ## Project Structure
 
