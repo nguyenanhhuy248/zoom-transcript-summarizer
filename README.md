@@ -4,19 +4,16 @@ A web application built with FastAPI and React. Uses a fine-tuned Google's Gemma
 
 The notebook for fine-tuning Gemma-2B-it model on Google Colab is provided in the /notebook directory. The fine-tuned model is published to Hugging Face @ https://huggingface.co/nguyenanhhuy248/gemma-2b-it-samsum
 
-## Features
-
-- 🚀 Responsive UI built with React and Material-UI
-- 🤖 AI-powered summarization using a fine-tuned Gemma-2B model
-- 📝 Support for VTT transcript files downloaded from Zoom
-- ⚡ Asynchronous processing with FastAPI
-
 ## Demo video
-
 
 https://github.com/user-attachments/assets/d458ab34-fe41-4095-9c94-b48d4f06d5b9
 
+## Features
 
+- Responsive UI built with React and Material-UI
+- AI-powered summarization using a fine-tuned Gemma-2B model
+- Support for VTT transcript files downloaded from Zoom
+- Asynchronous processing with FastAPI
 
 ## Project Structure
 
