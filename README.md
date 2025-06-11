@@ -8,7 +8,6 @@ The notebook for fine-tuning Gemma-2B-it model on Google Colab is provided in th
 
 https://github.com/user-attachments/assets/4d2ab20d-a409-446d-85d1-f8b6415ffaae
 
-
 ## Features
 
 - Responsive UI built with React and Material-UI
@@ -101,6 +100,44 @@ HUGGINGFACE_TOKEN = "your_token_here"
    ```
 
 3. Open your browser and visit `http://localhost:3000`
+
+## Running in Production with Docker
+
+You can run both the backend (FastAPI) and frontend (React) in production using Docker. Dockerfiles are provided in the `backend/` and `frontend/` directories.
+
+### 1. Build Docker Images
+
+From the project root, build the backend and frontend images:
+
+```bash
+# Build backend image
+cd backend
+sudo docker build -t zoom-backend .
+
+# Build frontend image
+cd ../frontend
+sudo docker build -t zoom-frontend .
+```
+
+### 2. Run Containers
+
+Run the backend and frontend containers:
+
+```bash
+# Run backend (FastAPI, port 8000)
+sudo docker run -d --name zoom-backend -p 8000:8000 --env-file ../backend/app/config/.secrets.toml zoom-backend
+
+# Run frontend (Nginx, port 80)
+sudo docker run -d --name zoom-frontend -p 80:80 zoom-frontend
+```
+
+- The backend will be available at `http://localhost:8000`
+- The frontend will be available at `http://localhost`
+
+#### Note
+
+- Make sure to provide your HuggingFace token in the `.secrets.toml` file as described above.
+- You can use Docker Compose for easier orchestration if needed.
 
 ## Usage
 
