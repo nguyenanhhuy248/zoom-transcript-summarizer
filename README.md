@@ -101,43 +101,35 @@ HUGGINGFACE_TOKEN = "your_token_here"
 
 3. Open your browser and visit `http://localhost:3000`
 
-## Running in Production with Docker
+## Running in Production with Docker Compose
 
-You can run both the backend (FastAPI) and frontend (React) in production using Docker. Dockerfiles are provided in the `backend/` and `frontend/` directories.
+A `docker-compose.yml` file is provided for easy orchestration of both backend (FastAPI) and frontend (React) services.
 
-### 1. Build Docker Images
+### 1. Prepare Environment
 
-From the project root, build the backend and frontend images:
+- Ensure your HuggingFace token is set in `backend/app/config/.secrets.toml` as described above.
 
-```bash
-# Build backend image
-cd backend
-sudo docker build -t zoom-backend .
+### 2. Build and Start All Services
 
-# Build frontend image
-cd ../frontend
-sudo docker build -t zoom-frontend .
-```
-
-### 2. Run Containers
-
-Run the backend and frontend containers:
+From the project root, run:
 
 ```bash
-# Run backend (FastAPI, port 8000)
-sudo docker run -d --name zoom-backend -p 8000:8000 --env-file ../backend/app/config/.secrets.toml zoom-backend
-
-# Run frontend (Nginx, port 80)
-sudo docker run -d --name zoom-frontend -p 80:80 zoom-frontend
+docker-compose up --build -d
 ```
 
 - The backend will be available at `http://localhost:8000`
 - The frontend will be available at `http://localhost`
 
-#### Note
+### 3. Stopping the Services
 
-- Make sure to provide your HuggingFace token in the `.secrets.toml` file as described above.
-- You can use Docker Compose for easier orchestration if needed.
+```bash
+docker-compose down
+```
+
+### Notes
+
+- The frontend service depends on the backend and will start after the backend is ready.
+- You can view logs with `docker-compose logs -f`.
 
 ## Usage
 
